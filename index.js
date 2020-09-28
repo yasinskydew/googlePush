@@ -31,22 +31,23 @@ const gmail = google.gmail({
 app.post('/push', (req, res) => {
   const { message } = req.body;
   const historyId = Buffer.from(message.data.historyId, 'base64').toString();
-  gmail.users.history.list({
-    startHistoryId: historyId,
-    userId: 'me',
-  }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err);
-    gmail.users.messages.get({
-      userId: 'me',
-      id: res.data.history[0].messagesAdded[0].message.id
-    }, (err, res) => {
-      if (err) return console.log('The API returned an error: ' + err);
-      res.data.payload.parts.map(i => {
-        console.log(Buffer.from(i.body.data, 'base64').toString())
-      })
-      console.log(res.data.payload.parts)
-    })
-  });
+  console.log(historyId)
+  // gmail.users.history.list({
+  //   startHistoryId: historyId,
+  //   userId: 'me',
+  // }, (err, res) => {
+  //   if (err) return console.log('The API returned an error: ' + err);
+  //   gmail.users.messages.get({
+  //     userId: 'me',
+  //     id: res.data.history[0].messagesAdded[0].message.id
+  //   }, (err, res) => {
+  //     if (err) return console.log('The API returned an error: ' + err);
+  //     res.data.payload.parts.map(i => {
+  //       console.log(Buffer.from(i.body.data, 'base64').toString())
+  //     })
+  //     console.log(res.data.payload.parts)
+  //   })
+  // });
   res.send('Success');
 });
 app.get('/', function(req, res) {
