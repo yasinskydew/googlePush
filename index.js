@@ -14,6 +14,7 @@ app.post('/push', (req, res) => {
     ? Buffer.from(message.data, 'base64').toString()
     : 'unknown';
   console.log(req.body);
+  console.log(`hello ${name}`);
   res.send(`hello ${name}`);
 });
 app.get('/', function(req, res) {
