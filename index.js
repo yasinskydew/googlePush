@@ -31,7 +31,7 @@ const gmail = google.gmail({
 app.post('/push', (req, res) => {
   const { message } = req.body;
   const data = Buffer.from(message.data, 'base64').toString();
-  console.log(data, 'data')
+  console.log(JSON.parse(data), 'data')
   // gmail.users.history.list({
   //   startHistoryId: historyId,
   //   userId: 'me',
