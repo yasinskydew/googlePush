@@ -36,7 +36,7 @@ app.post('/push', (req, res) => {
     userId: 'me',
   }, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
-    console.log(res)
+    console.log(res.data, 'res.data')
     // gmail.users.messages.get({
     //   userId: 'me',
     //   id: res.data.history[0].messagesAdded[0].message.id
