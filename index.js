@@ -32,7 +32,7 @@ app.post('/push', (req, res) => {
   const { message } = req.body;
   const data = JSON.parse(Buffer.from(message.data, 'base64').toString());
   gmail.users.history.list({
-    startHistoryId: data.historyId,
+    startHistoryId: String(data.historyId),
     userId: 'me',
   }, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
