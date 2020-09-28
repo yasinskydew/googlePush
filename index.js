@@ -36,16 +36,17 @@ app.post('/push', (req, res) => {
     userId: 'me',
   }, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
-    gmail.users.messages.get({
-      userId: 'me',
-      id: res.data.history[0].messagesAdded[0].message.id
-    }, (err, res) => {
-      if (err) return console.log('The API returned an error: ' + err);
-      res.data.payload.parts.map(i => {
-        console.log(Buffer.from(i.body.data, 'base64').toString())
-      })
-      console.log(res.data.payload.parts)
-    })
+    console.log(res)
+    // gmail.users.messages.get({
+    //   userId: 'me',
+    //   id: res.data.history[0].messagesAdded[0].message.id
+    // }, (err2, res2) => {
+    //   if (err2) return console.log('The API returned an error: ' + err);
+    //   res2.data.payload.parts.map(i => {
+    //     console.log(Buffer.from(i.body.data, 'base64').toString())
+    //   })
+    //   console.log(res.data.payload.parts)
+    // })
   });
   res.send('Success');
 });
