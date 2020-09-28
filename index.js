@@ -9,8 +9,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/push', (req, res) => {
+  const { message } = req.body;
+  const name = message.data
+    ? Buffer.from(message.data, 'base64').toString()
+    : 'unknown';
   console.log(req.body);
-  res.send('success');
+  res.send(`hello ${name}`);
 });
 app.get('/', function(req, res) {
   res.send('Backend Business Boutique is Ready');
