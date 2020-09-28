@@ -13,7 +13,6 @@ app.post('/push', (req, res) => {
   const name = message.data
     ? Buffer.from(message.data, 'base64').toString()
     : 'unknown';
-  console.log(req.body);
   console.log(`hello ${name}`);
   res.send(`hello ${name}`);
 });
