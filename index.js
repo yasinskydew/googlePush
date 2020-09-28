@@ -30,29 +30,9 @@ const gmail = google.gmail({
 
 app.post('/push', (req, res) => {
   const { message } = req.body;
-  const data = Buffer.from(message.data, 'base64').toString();
-  console.log(JSON.parse(data), 'data')
-  // gmail.users.history.list({
-  //   startHistoryId: historyId,
-  //   userId: 'me',
-  // }, (err, res) => {
-  //   if (err) return console.log('The API returned an error: ' + err);
-  //   gmail.users.messages.get({
-  //     userId: 'me',
-  //     id: res.data.history[0].messagesAdded[0].message.id
-  //   }, (err, res) => {
-  //     if (err) return console.log('The API returned an error: ' + err);
-  //     res.data.payload.parts.map(i => {
-  //       console.log(Buffer.from(i.body.data, 'base64').toString())
-  //     })
-  //     console.log(res.data.payload.parts)
-  //   })
-  // });
-  res.send('Success');
-});
-app.get('/', function(req, res) {
+  const data = JSON.parse(Buffer.from(message.data, 'base64').toString());
   gmail.users.history.list({
-    startHistoryId: '3893',
+    startHistoryId: data.historyId,
     userId: 'me',
   }, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
@@ -67,6 +47,25 @@ app.get('/', function(req, res) {
       console.log(res.data.payload.parts)
     })
   });
+  res.send('Success');
+});
+app.get('/', function(req, res) {
+  // gmail.users.history.list({
+  //   startHistoryId: '3893',
+  //   userId: 'me',
+  // }, (err, res) => {
+  //   if (err) return console.log('The API returned an error: ' + err);
+  //   gmail.users.messages.get({
+  //     userId: 'me',
+  //     id: res.data.history[0].messagesAdded[0].message.id
+  //   }, (err, res) => {
+  //     if (err) return console.log('The API returned an error: ' + err);
+  //     res.data.payload.parts.map(i => {
+  //       console.log(Buffer.from(i.body.data, 'base64').toString())
+  //     })
+  //     console.log(res.data.payload.parts)
+  //   })
+  // });
   res.send('Backend Business Boutique is Ready');
 });
 const port = process.env.PORT || 3001;
