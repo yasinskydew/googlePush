@@ -65,6 +65,7 @@ app.post('/push', (req, res) => {
   //     }
   //   }
   // });
+  console.log(data, 'data')
   res.send('Success');
 });
 app.get('/', function(req, res) {
