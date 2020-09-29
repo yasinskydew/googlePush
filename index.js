@@ -35,9 +35,9 @@ const gmailHistoryFunc = (params) => {
     });
   })
 };
-
 app.post('/push', async (req, res) => {
   const { message } = req.body;
+  console.log(message);
   const { emailAddress, historyId } = JSON.parse(Buffer.from(message.data, 'base64').toString());
   const history = await gmailHistoryFunc({
     startHistoryId: `${historyId}`,
