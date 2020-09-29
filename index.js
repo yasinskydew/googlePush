@@ -27,10 +27,23 @@ const gmail = google.gmail({
   version: 'v1',
   auth: oauth2Client,
 });
+const gmailHistoryFunc = (params) => {
+  return new Promise((resolve, reject) => {
+    gmail.users.history.list(params, (err, res) => {
+      if(err) reject(err);
+      resolve(res.data);
+    });
+  })
+};
 
-app.post('/push', (req, res) => {
+app.post('/push', async (req, res) => {
   const { message } = req.body;
-  const data = JSON.parse(Buffer.from(message.data, 'base64').toString());
+  const { emailAddress, historyId } = JSON.parse(Buffer.from(message.data, 'base64').toString());
+  const history = await gmailHistoryFunc({
+    startHistoryId: `${historyId}`,
+    userId: 'me',
+  });
+  console.log(history, 'history');
   // gmail.users.history.list({
   //   startHistoryId: String(data.historyId),
   //   userId: 'me',
@@ -68,14 +81,37 @@ app.post('/push', (req, res) => {
   console.log(data, 'data')
   res.send('Success');
 });
-app.get('/', function(req, res) {
-  gmail.users.history.list({
-    startHistoryId: '4802',
+
+app.get('/watch', (req, res) => {
+  gmail.users.watch({
+    topicName: 'projects/node-js-290510/topics/test-theme',
     userId: 'me',
-  }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err);
-    console.log(res.data.history[0].messages[0])
+  }, (err, responce) => {
+    if(err){
+      console.log(err);
+      res.send('error')
+    } else {
+      console.log(responce)
+      res.send('success')
+    }
+  })
+});
+
+app.get('/', async function(req, res) {
+  const history = await gmailHistoryFunc({
+    startHistoryId: '5140',
+    userId: 'me',
   });
+  const threadId = history.history[0].messages[0].id;
+  gmail.users.messages.list({
+      userId: 'me',
+      id: threadId
+    }, (err2, res2) => {
+      if (err2) return console.log('The API returned an error: ' + err);
+      res2.data.payload.parts.map(i => {
+        console.log(Buffer.from(i.body.data, 'base64').toString())
+      })
+    })
   res.send('Backend Business Boutique is Ready');
 });
 const port = process.env.PORT || 3001;
