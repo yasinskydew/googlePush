@@ -46,24 +46,24 @@ const gmailThreadFunc = (params) => {
   })
 };
 app.post('/push', async (req, res) => {
-  const { message } = req.body;
-  const { emailAddress, historyId } = JSON.parse(Buffer.from(message.data, 'base64').toString());
-  const { history } = await gmailHistoryFunc({
-    startHistoryId: `${defaultHistoryId}`,
-    userId: 'me',
-  });
-  const { messagesAdded, messages, id } = history[0];
-  const [{ message:{ threadId } }] = messagesAdded;
-  console.log(messagesAdded, 'messagesAdded');
-  console.log(messages, 'messages');
-  console.log(threadId, 'threadId');
-  console.log(defaultHistoryId, 'defaultHistoryId');
-  const thread = await gmailThreadFunc({
-    userId: 'me',
-    id: threadId,
-  });
-  console.log(thread);
-  defaultHistoryId =`${historyId}`
+  // const { message } = req.body;
+  // const { emailAddress, historyId } = JSON.parse(Buffer.from(message.data, 'base64').toString());
+  // const { history } = await gmailHistoryFunc({
+  //   startHistoryId: `${defaultHistoryId}`,
+  //   userId: 'me',
+  // });
+  // const { messagesAdded, messages, id } = history[0];
+  // const [{ message:{ threadId } }] = messagesAdded;
+  // console.log(messagesAdded, 'messagesAdded');
+  // console.log(messages, 'messages');
+  // console.log(threadId, 'threadId');
+  // console.log(defaultHistoryId, 'defaultHistoryId');
+  // const thread = await gmailThreadFunc({
+  //   userId: 'me',
+  //   id: threadId,
+  // });
+  // console.log(thread);
+  // defaultHistoryId =`${historyId}`
   res.send('Success');
 });
 
