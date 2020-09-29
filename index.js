@@ -20,6 +20,7 @@ const oauth2Client = new google.auth.OAuth2(
     credential.client_secret,
     credential.redirect_uris[0],
 );
+let defaultHistoryId;
 oauth2Client.setCredentials({
   refresh_token: credential.refresh_token
 });
@@ -37,48 +38,13 @@ const gmailHistoryFunc = (params) => {
 };
 app.post('/push', async (req, res) => {
   const { message } = req.body;
-  console.log(message);
   const { emailAddress, historyId } = JSON.parse(Buffer.from(message.data, 'base64').toString());
   const history = await gmailHistoryFunc({
-    startHistoryId: `${historyId}`,
+    startHistoryId: `${defaultHistoryId}`,
     userId: 'me',
   });
-  console.log('update');
-  console.log(history, 'history');
-  // gmail.users.history.list({
-  //   startHistoryId: String(data.historyId),
-  //   userId: 'me',
-  // }, (err, res) => {
-  //   if (err) return console.log('The API returned an error: ' + err);
-  //   if(res.data.history.length) {
-  //     const messages = res.data.history[0].messages;
-  //     const messagesAdd = res.data.history[0].messagesAdded;
-  //     if(messages.length) {
-  //       gmail.users.messages.get({
-  //         userId: 'me',
-  //         id: messages[0].id
-  //       }, (err2, res2) => {
-  //         if (err2) return console.log('The API returned an error: ' + err);
-  //         res2.data.payload.parts.map(i => {
-  //           console.log(Buffer.from(i.body.data, 'base64').toString())
-  //         })
-  //         console.log(res.data.payload.parts)
-  //       });
-  //     }
-  //     if(messagesAdd.length) {
-  //       gmail.users.messages.get({
-  //         userId: 'me',
-  //         id: messagesAdd[0].message.id
-  //       }, (err2, res2) => {
-  //         if (err2) return console.log('The API returned an error: ' + err);
-  //         res2.data.payload.parts.map(i => {
-  //           console.log(Buffer.from(i.body.data, 'base64').toString())
-  //         })
-  //         console.log(res.data.payload.parts)
-  //       })
-  //     }
-  //   }
-  // });
+  console.log(history.data, 'history');
+  defaultHistoryId = `${historyId}`
   res.send('Success');
 });
 
@@ -86,12 +52,14 @@ app.get('/watch', (req, res) => {
   gmail.users.watch({
     topicName: 'projects/node-js-290510/topics/test-theme',
     userId: 'me',
+    labelIds: ["INBOX"],
   }, (err, responce) => {
     if(err){
       console.log(err);
       res.send('error')
     } else {
-      console.log(responce)
+      defaultHistoryId = `${responce.data.historyId}`;
+      console.log(responce.data.historyId)
       res.send('success')
     }
   })
@@ -105,12 +73,13 @@ app.get('/', async function(req, res) {
   const threadId = history.history[0].messages[0].id;
   gmail.users.messages.list({
       userId: 'me',
-      id: threadId
+      id: '5843'
     }, (err2, res2) => {
-      if (err2) return console.log('The API returned an error: ' + err);
-      res2.data.payload.parts.map(i => {
-        console.log(Buffer.from(i.body.data, 'base64').toString())
-      })
+      if (err2) return console.log('The API returned an error: ' + err2);
+      console.log(res2)
+      // res2.data.payload.parts.map(i => {
+      //   console.log(Buffer.from(i.body.data, 'base64').toString())
+      // })
     })
   res.send('Backend Business Boutique is Ready');
 });
