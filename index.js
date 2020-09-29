@@ -39,11 +39,13 @@ const gmailHistoryFunc = (params) => {
 app.post('/push', async (req, res) => {
   const { message } = req.body;
   const { emailAddress, historyId } = JSON.parse(Buffer.from(message.data, 'base64').toString());
-  console.log(`${defaultHistoryId}`, '`${defaultHistoryId}`');
-  const history = await gmailHistoryFunc({
+  const { history } = await gmailHistoryFunc({
     startHistoryId: `${defaultHistoryId}`,
     userId: 'me',
   });
+  const { messagesAdded, messages, id } = history[0];
+  console.log(messagesAdded, 'messagesAdded')
+  console.log(messages, 'messages')
   console.log(history, 'history');
   console.log(defaultHistoryId, 'defaultHistoryId');
   defaultHistoryId =`${historyId}`
