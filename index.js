@@ -31,40 +31,40 @@ const gmail = google.gmail({
 app.post('/push', (req, res) => {
   const { message } = req.body;
   const data = JSON.parse(Buffer.from(message.data, 'base64').toString());
-  gmail.users.history.list({
-    startHistoryId: String(data.historyId),
-    userId: 'me',
-  }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err);
-    if(res.data.history.length) {
-      const messages = res.data.history[0].messages;
-      const messagesAdd = res.data.history[0].messagesAdded;
-      if(messages.length) {
-        gmail.users.messages.get({
-          userId: 'me',
-          id: messages[0].id
-        }, (err2, res2) => {
-          if (err2) return console.log('The API returned an error: ' + err);
-          res2.data.payload.parts.map(i => {
-            console.log(Buffer.from(i.body.data, 'base64').toString())
-          })
-          console.log(res.data.payload.parts)
-        });
-      }
-      if(messagesAdd.length) {
-        gmail.users.messages.get({
-          userId: 'me',
-          id: messagesAdd[0].message.id
-        }, (err2, res2) => {
-          if (err2) return console.log('The API returned an error: ' + err);
-          res2.data.payload.parts.map(i => {
-            console.log(Buffer.from(i.body.data, 'base64').toString())
-          })
-          console.log(res.data.payload.parts)
-        })
-      }
-    }
-  });
+  // gmail.users.history.list({
+  //   startHistoryId: String(data.historyId),
+  //   userId: 'me',
+  // }, (err, res) => {
+  //   if (err) return console.log('The API returned an error: ' + err);
+  //   if(res.data.history.length) {
+  //     const messages = res.data.history[0].messages;
+  //     const messagesAdd = res.data.history[0].messagesAdded;
+  //     if(messages.length) {
+  //       gmail.users.messages.get({
+  //         userId: 'me',
+  //         id: messages[0].id
+  //       }, (err2, res2) => {
+  //         if (err2) return console.log('The API returned an error: ' + err);
+  //         res2.data.payload.parts.map(i => {
+  //           console.log(Buffer.from(i.body.data, 'base64').toString())
+  //         })
+  //         console.log(res.data.payload.parts)
+  //       });
+  //     }
+  //     if(messagesAdd.length) {
+  //       gmail.users.messages.get({
+  //         userId: 'me',
+  //         id: messagesAdd[0].message.id
+  //       }, (err2, res2) => {
+  //         if (err2) return console.log('The API returned an error: ' + err);
+  //         res2.data.payload.parts.map(i => {
+  //           console.log(Buffer.from(i.body.data, 'base64').toString())
+  //         })
+  //         console.log(res.data.payload.parts)
+  //       })
+  //     }
+  //   }
+  // });
   res.send('Success');
 });
 app.get('/', function(req, res) {
