@@ -45,7 +45,7 @@ app.post('/push', async (req, res) => {
     userId: 'me',
   });
   console.log(history.data, 'history');
-  defaultHistoryId = `${historyId}`
+  // defaultHistoryId =`${historyId}`
   res.send('Success');
 });
 
