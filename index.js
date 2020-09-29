@@ -53,7 +53,7 @@ app.post('/push', async (req, res) => {
     userId: 'me',
   });
   const { messagesAdded, messages, id } = history[0];
-  const [{ threadId }] = messagesAdded;
+  const [{ message:{ threadId } }] = messagesAdded;
   console.log(messagesAdded, 'messagesAdded');
   console.log(messages, 'messages');
   console.log(threadId, 'threadId');
