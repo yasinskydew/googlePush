@@ -39,6 +39,7 @@ const gmailHistoryFunc = (params) => {
 app.post('/push', async (req, res) => {
   const { message } = req.body;
   const { emailAddress, historyId } = JSON.parse(Buffer.from(message.data, 'base64').toString());
+  console.log(`${defaultHistoryId}`, '`${defaultHistoryId}`');
   const history = await gmailHistoryFunc({
     startHistoryId: `${defaultHistoryId}`,
     userId: 'me',
@@ -59,7 +60,7 @@ app.get('/watch', (req, res) => {
       res.send('error')
     } else {
       defaultHistoryId = `${responce.data.historyId}`;
-      console.log(responce.data.historyId)
+      console.log(defaultHistoryId, 'defaultHistoryId')
       res.send('success')
     }
   })
