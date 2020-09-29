@@ -36,6 +36,15 @@ const gmailHistoryFunc = (params) => {
     });
   })
 };
+
+const gmailThreadFunc = (params) => {
+  return new Promise((resolve, reject) => {
+    gmail.users.threads.get(params, (err, res) => {
+      if(err) reject(err);
+      resolve(res.data);
+    });
+  })
+};
 app.post('/push', async (req, res) => {
   const { message } = req.body;
   const { emailAddress, historyId } = JSON.parse(Buffer.from(message.data, 'base64').toString());
@@ -44,10 +53,16 @@ app.post('/push', async (req, res) => {
     userId: 'me',
   });
   const { messagesAdded, messages, id } = history[0];
-  console.log(messagesAdded, 'messagesAdded')
-  console.log(messages, 'messages')
-  console.log(history, 'history');
+  const [{ threadId }] = messagesAdded;
+  console.log(messagesAdded, 'messagesAdded');
+  console.log(messages, 'messages');
+  console.log(threadId, 'threadId');
   console.log(defaultHistoryId, 'defaultHistoryId');
+  const thread = await gmailThreadFunc({
+    userId: 'me',
+    id: threadId,
+  });
+  console.log(thread);
   defaultHistoryId =`${historyId}`
   res.send('Success');
 });
