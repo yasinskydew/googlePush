@@ -43,6 +43,7 @@ app.post('/push', async (req, res) => {
     startHistoryId: `${historyId}`,
     userId: 'me',
   });
+  console.log('update');
   console.log(history, 'history');
   // gmail.users.history.list({
   //   startHistoryId: String(data.historyId),
@@ -78,7 +79,6 @@ app.post('/push', async (req, res) => {
   //     }
   //   }
   // });
-  console.log(data, 'data')
   res.send('Success');
 });
 
