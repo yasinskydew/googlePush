@@ -8,5 +8,8 @@ export default (app, controllers) => {
   router
     .route('/push')
     .post(controllers.gmailApis.pushNotification)
+  router
+    .route('/watch')
+    .post(controllers.gmailApis.watchUser)
   return router;
 };

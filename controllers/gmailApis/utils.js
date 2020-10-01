@@ -45,7 +45,7 @@ export const gmailWatch = (gmail) => {
         console.log(err);
         reject(err.message)
       } else {
-        resolve(res);
+        resolve(res.data);
       }
     })
   });
