@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/push', async (req, res) => {
-  axios.post('http://localhost:3001/api/gmailapis/push', req.body)
+  axios.post('http://0.0.0.0:3001/api/gmailapis/push', req.body)
     .then(function (response) {
       res.send('success')
     })
