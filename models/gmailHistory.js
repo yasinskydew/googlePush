@@ -21,6 +21,8 @@ const GmailHistorySchema = new mongoose.Schema(
 {
   currentHistoryId: String,
   userEmail: String,
+  user: mongoose.Schema.Types.ObjectId,
+  company: mongoose.Schema.Types.ObjectId,
 },
 { timestamps: true },
 );
@@ -32,6 +34,8 @@ GmailHistorySchema.methods.toJSON = function() {
     id: this._id,
     currentHistoryId: this.currentHistoryId,
     userEmail: this.userEmail,
+    user: this.user,
+    company: this.company,
   };
 };
 

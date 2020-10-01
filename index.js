@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/push', async (req, res) => {
-  axios.post('https://a4fd5c037a8b.ngrok.io/api/gmailapis/push', req.body)
+  axios.post('https://8a2b6240b50c.ngrok.io/api/gmailapis/push', req.body)
     .then(function (response) {
       res.send('success')
     })

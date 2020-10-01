@@ -25,15 +25,6 @@ const gmailHistoryFunc = (params, gmail) => {
   })
 };
 
-const gmailThreadFunc = (params, gmail) => {
-  return new Promise((resolve, reject) => {
-    gmail.users.threads.get(params, (err, res) => {
-      if(err) reject(err);
-      resolve(res.data);
-    });
-  })
-};
-
 export const gmailWatch = (gmail) => {
   return new Promise((resolve, reject) => {
     gmail.users.watch({
@@ -42,7 +33,7 @@ export const gmailWatch = (gmail) => {
       labelIds: ["INBOX"],
     }, (err, res) => {
       if(err){
-        console.log(err);
+        console.log(err.message);
         reject(err.message)
       } else {
         resolve(res.data);
@@ -51,19 +42,34 @@ export const gmailWatch = (gmail) => {
   });
 };
 
-export const getGmailHistory = async (userEmail) => {
+export const getGmailHistory = async (params) => {
+  const { userEmail } = params;
   const GmailHistory = mongoose.model('GmailHistory');
   const gmailHistory = await GmailHistory.findOne({
     userEmail
   });
   if(!gmailHistory) {
-    const newGmailHistory = new GmailHistory({
-      userEmail,
-    });
+    const newGmailHistory = new GmailHistory(params);
     await newGmailHistory.save();
     return newGmailHistory;
   }
   return gmailHistory;
+}
+
+export const getGmailMessageFunc = (id, gmail) => {
+  return new Promise((resolve, reject) => {
+    gmail.users.messages.get({
+      userId: 'me',
+      id,
+    }, (err, res) => {
+      if(err){
+        console.log(err.message);
+        reject(err.message)
+      } else {
+        resolve(res.data);
+      }
+    })
+  });
 }
 
 export const parseNotification = (message) => {
@@ -75,16 +81,22 @@ export const parseNotification = (message) => {
 }
 
 
-export const getThread = async (defaultHistoryId, gmail) => {
+export const getMessageData = async (defaultHistoryId, gmail) => {
   const { history } = await gmailHistoryFunc({
     startHistoryId: `${defaultHistoryId}`,
     userId: 'me',
   }, gmail);
-  const { messagesAdded, messages, id } = history[0];
-  const [{ message:{ threadId } }] = messagesAdded;
-  console.log(messagesAdded, 'messagesAdded');
-  console.log(messages, 'messages');
-  console.log(threadId, 'threadId');
-  console.log(defaultHistoryId, 'defaultHistoryId');
-  return threadId;
+  if(!history[history.length-1].messagesAdded) {
+    return false;
+  }
+  const { messagesAdded } = history[history.length-1];
+  const [{ message:{ threadId, id } }] = messagesAdded;
+  const messageData = await getGmailMessageFunc(id, gmail);
+  const { snippet, payload:{ headers } } = messageData;
+  const delivery = headers.find(i => i.name === 'From');
+  return {
+    threadId,
+    snippet,
+    deliveryFromValue: delivery.value,
+  }
 }
