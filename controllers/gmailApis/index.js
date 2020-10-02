@@ -79,7 +79,7 @@ export default app => {
           timeOfGetMessage: new Date(),
         }
         const inputAxios = axios.create({
-          baseURL: 'http://192.168.30.56:3000/api/',
+          baseURL: 'http://192.168.100.18:3000/api/',
         });
         await inputAxios.post('usermessages', result);
         return res.sendStatus(200);

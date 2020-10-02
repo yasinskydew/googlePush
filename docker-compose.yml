@@ -8,14 +8,14 @@ services:
       - "27018:27018"
     volumes:
       - ./dbdata:/data/db
-  redis:
-    image: redis:alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./redis-data:/var/lib/redis
-    environment:
-      - REDIS_REPLICATION_MODE=development
+#  redis:
+#    image: redis:alpine
+#    ports:
+#      - "6379:6379"
+#    volumes:
+#      - ./redis-data:/var/lib/redis
+#    environment:
+#      - REDIS_REPLICATION_MODE=development
   app:
     image: node:10
     command: /bin/bash -c "yarn install && npm run dev"
@@ -29,7 +29,7 @@ services:
       - MONGO_URL=mongodb://mongodb/gmailpush
     depends_on:
       - mongodb
-      - redis
+#      - redis
     links:
       - mongodb
-      - redis
+#      - redis

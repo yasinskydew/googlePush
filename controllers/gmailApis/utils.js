@@ -86,7 +86,6 @@ export const getMessageData = async (defaultHistoryId, gmail) => {
     startHistoryId: `${defaultHistoryId}`,
     userId: 'me',
   }, gmail);
-  console.log(history, 'history')
   if(!history[history.length-1].messagesAdded) {
     return false;
   }
